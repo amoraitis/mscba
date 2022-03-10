@@ -149,7 +149,7 @@ awk -F ',' -v bus="$selected_bus" '{if($3==bus) {print $2}}' oasa | sort -k 1n -
 
 # How many buses have shared at least one route with the chosen bus?
 
-awk -F ',' -v bus="$selected_bus" '{if($3==bus) {print $2$3, $2, $3}}' oasa | awk '!a[$1]++' | awk '{print $2","$3}' > right
-awk -F ',' -v bus="$selected_bus" '{if($3!=bus) {print $2$3, $2, $3}}' oasa | awk '!a[$1]++' | awk '{print $2","$3}' > left
-awk -F ',' 'NR==FNR{ a[$1]=$2; next }$1 in a{ $2=a[$1]; print }' right left  | awk '{print $2}' | awk '!a[$1]++' | wc -l
+awk -F ',' -v bus="$selected_bus" '{if($3==bus) {print $2$3, $2, $3}}' oasa | awk '!a[$1]++' | awk '{print $2}' | sort -t',' -k 1n > right
+awk -F ',' -v bus="$selected_bus" '{if($3!=bus) {print $2$3, $2, $3}}' oasa | awk '!a[$1]++' | awk '{print $2","$3}' | sort -t',' -k 1n > left
+join -t ',' -11 -21 left right | awk -F, '!a[$2]++' | wc -l
 rm -rf left right
